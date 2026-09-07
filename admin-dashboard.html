@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Meenakshi Dream Space</title>
+    <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/jzttezz9/image/upload/v1788772682/mds_logo.svg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #32699b;
+            --primary-dark: #1a3459;
+            --secondary: #616262;
+            --primary-light: #4a85bd;
+            --dark: #0f1f35;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --gradient-primary: linear-gradient(135deg, #32699b 0%, #1a3459 100%);
+            --gradient-dark: linear-gradient(180deg, #1a3459 0%, #0f1f35 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-primary: 0 10px 30px -5px rgba(50, 105, 155, 0.4);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-body: 'Poppins', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --sidebar-width: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); font-size: 14px; line-height: 1.6; color: var(--gray-700); background: var(--gray-50); overflow-x: hidden; }
+        button { cursor: pointer; font-family: inherit; border: none; background: none; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+        h1, h2, h3, h4, h5 { font-family: var(--font-heading); font-weight: 700; color: var(--dark); line-height: 1.2; }
+        input, select, textarea { font-family: inherit; font-size: inherit; }
+
+        /* ============ LAYOUT ============ */
+        .admin-wrapper { display: flex; min-height: 100vh; }
+
+        /* ============ SIDEBAR ============ */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--gradient-dark);
+            color: var(--white);
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 5px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px; }
+
+        .sidebar-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-header img { width: 42px; filter: brightness(0) invert(1); }
+        .sidebar-header h3 { font-family: var(--font-body); font-size: 15px; color: var(--white); font-weight: 700; }
+        .sidebar-header p { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+        .admin-info {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 15px;
+        }
+
+        .admin-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .admin-info .a-content { flex: 1; min-width: 0; }
+        .admin-info h4 { font-family: var(--font-body); font-size: 13px; color: var(--white); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .admin-info .admin-role { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: #ffd700; padding: 2px 8px; background: rgba(255, 215, 0, 0.15); border-radius: 10px; margin-top: 3px; font-weight: 600; }
+
+        .sidebar-menu { list-style: none; padding: 0 12px; }
+
+        .menu-category {
+            padding: 15px 15px 8px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .sidebar-menu li { margin-bottom: 2px; }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: rgba(255,255,255,0.75);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .sidebar-menu a i { width: 20px; font-size: 14px; text-align: center; flex-shrink: 0; }
+
+        .sidebar-menu a .menu-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: var(--white);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(50, 105, 155, 0.3);
+            color: var(--white);
+        }
+
+        .sidebar-menu a.active::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: #ffd700;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .sidebar-footer {
+            padding: 15px 25px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ffb0b0;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.35); color: var(--white); }
+
+        /* ============ MAIN CONTENT ============ */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        /* ============ TOP BAR ============ */
+        .topbar {
+            background: var(--white);
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 15px;
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+
+        .menu-toggle {
+            display: none;
+            width: 38px;
+            height: 38px;
+            background: var(--gray-100);
+            border-radius: var(--radius-md);
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--primary);
+        }
+
+        .topbar h1 {
+            font-family: var(--font-body);
+            font-size: 18px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+        .topbar-btn {
+            width: 38px;
+            height: 38px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--gray-700);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .topbar-btn:hover { background: var(--primary); color: var(--white); }
+        .topbar-btn .badge-dot { position: absolute; top: 6px; right: 6px; width: 9px; height: 9px; background: var(--danger); border-radius: 50%; border: 2px solid var(--white); }
+
+        /* ============ CONTENT AREA ============ */
+        .content-area { padding: 25px; }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ PAGE HEADER ============ */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h2 {
+            font-family: var(--font-body);
+            font-size: 22px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .page-header .breadcrumb {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 3px;
+        }
+
+        .page-header .breadcrumb a { color: var(--primary); }
+
+        /* ============ STATS GRID ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+        .stat-card .stat-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            font-size: 20px;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .stat-card.blue .stat-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .stat-card.green .stat-icon { background: linear-gradient(135deg, #10b981, #047857); }
+        .stat-card.orange .stat-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .stat-card.purple .stat-icon { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .stat-card.red .stat-icon { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .stat-card.teal .stat-icon { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+
+        .stat-card h3 {
+            font-family: var(--font-body);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1;
+        }
+
+        .stat-card p { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+        /* ============ CARDS ============ */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 22px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-header h3 {
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h3 i { color: var(--primary); }
+        .card-body { padding: 22px; }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            padding: 9px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .btn-primary { background: var(--gradient-primary); color: var(--white); box-shadow: var(--shadow-primary); }
+        .btn-primary:hover { transform: translateY(-2px); }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-warning { background: var(--warning); color: var(--white); }
+        .btn-info { background: var(--info); color: var(--white); }
+        .btn-secondary { background: var(--gray-200); color: var(--gray-700); }
+
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-icon { padding: 8px 10px; }
+
+        /* ============ TABLES ============ */
+        .table-wrap { overflow-x: auto; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead { background: var(--gray-50); }
+
+        .data-table th {
+            padding: 12px 18px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--gray-200);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 18px;
+            font-size: 13px;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr { transition: var(--transition); }
+        .data-table tbody tr:hover { background: var(--gray-50); }
+
+        .table-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .action-btn.edit { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .action-btn.edit:hover { background: var(--info); color: var(--white); }
+        .action-btn.delete { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .action-btn.delete:hover { background: var(--danger); color: var(--white); }
+        .action-btn.view { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .action-btn.view:hover { background: var(--success); color: var(--white); }
+
+        /* ============ STATUS BADGE ============ */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-new { background: #dbeafe; color: #1e40af; }
+        .status-contacted { background: #fef3c7; color: #92400e; }
+        .status-in_progress { background: #ede9fe; color: #6d28d9; }
+        .status-converted { background: #d1fae5; color: #065f46; }
+        .status-closed { background: #e5e7eb; color: #374151; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-inactive { background: #fecaca; color: #991b1b; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-completed { background: #d1fae5; color: #065f46; }
+
+        /* ============ FORMS ============ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required { color: var(--danger); }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--gray-800);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(50, 105, 155, 0.1);
+        }
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-group.checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group.checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .form-group.checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* ============ MODAL ============ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            overflow-y: auto;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            max-width: 800px;
+            width: 100%;
+            max-height: calc(100vh - 80px);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--gray-50);
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-body);
+            font-size: 17px;
+            color: var(--dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header h3 i { color: var(--primary); }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: var(--white); }
+
+        .modal-body {
+            padding: 22px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 15px 22px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            background: var(--gray-50);
+        }
+
+        /* ============ FILTER BAR ============ */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+            max-width: 350px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 9px 12px 9px 36px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            transition: var(--transition);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filter-select {
+            padding: 9px 12px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            background: var(--white);
+            min-width: 130px;
+        }
+
+        /* ============ ACCORDION FORM ============ */
+        .form-accordion {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .form-accordion-header {
+            padding: 12px 16px;
+            background: var(--gray-50);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .form-accordion-header:hover { background: var(--gray-100); }
+
+        .form-accordion-header h4 {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .form-accordion-body {
+            padding: 16px;
+            display: none;
+        }
+
+        .form-accordion.active .form-accordion-body { display: block; }
+        .form-accordion.active .form-accordion-header { background: var(--primary); color: var(--white); }
+        .form-accordion.active .form-accordion-header h4 { color: var(--white); }
+
+        /* ============ CHIP LIST ============ */
+        .chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            padding: 4px 10px;
+            background: rgba(50, 105, 155, 0.1);
+            color: var(--primary);
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip i {
+            cursor: pointer;
+            font-size: 10px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .chip i:hover { opacity: 1; color: var(--danger); }
+
+        /* ============ SUB LIST ============ */
+        .sub-list {
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-top: 8px;
+        }
+
+        .sub-list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .sub-list-item span { flex: 1; }
+
+        .sub-list-item .sub-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .sub-list-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .sub-list-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 56px;
+            color: var(--gray-300);
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            font-family: var(--font-body);
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        /* ============ TOAST ============ */
+        .toast-container {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--white);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            max-width: 380px;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast i { font-size: 18px; flex-shrink: 0; }
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--danger); }
+        .toast .t-content { flex: 1; }
+        .toast .t-title { font-weight: 600; color: var(--dark); font-size: 13px; }
+        .toast .t-message { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ============ MESSAGES CHAT ============ */
+        .customers-list {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            height: 600px;
+        }
+
+        .customers-sidebar {
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            overflow-y: auto;
+        }
+
+        .customer-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .customer-item:hover, .customer-item.active {
+            background: var(--white);
+        }
+
+        .customer-item.active { border-left: 3px solid var(--primary); }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .customer-item .c-info { flex: 1; min-width: 0; }
+        .customer-item h5 { font-family: var(--font-body); font-size: 13px; color: var(--dark); font-weight: 600; }
+        .customer-item p { font-size: 11px; color: var(--gray-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .msg-bubble {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .msg-bubble.customer {
+            background: var(--white);
+            border-bottom-left-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .msg-bubble.admin {
+            background: var(--gradient-primary);
+            color: var(--white);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-time { font-size: 10px; opacity: 0.7; margin-top: 4px; }
+
+        .chat-input {
+            padding: 12px;
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid var(--gray-200);
+            background: var(--white);
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-full);
+            font-size: 13px;
+        }
+
+        .chat-input button {
+            padding: 10px 18px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
+
+        /* ============ OVERLAY ============ */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+
+        .sidebar-overlay.active { display: block; }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .menu-toggle { display: flex; }
+            .customers-list { grid-template-columns: 1fr; height: auto; }
+            .customers-sidebar { max-height: 300px; }
+        }
+
+        @media (max-width: 640px) {
+            .content-area { padding: 15px; }
+            .toast { min-width: auto; max-width: 92vw; }
+            .toast-container { top: 15px; right: 10px; left: 10px; }
+            .topbar { padding: 10px 15px; }
+            .topbar h1 { font-size: 16px; }
+            .page-header h2 { font-size: 18px; }
+            .modal { margin: 10px; }
+            .modal-body { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============ TOAST ============ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============ SIDEBAR OVERLAY ============ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ============ MODAL ============ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalBox">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fas fa-edit"></i> Edit</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="modalSaveBtn"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-wrapper">
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://res.cloudinary.com/jzttezz9/image/upload/v1788772682/mds_logo.svg" alt="MDS">
+                <div>
+                    <h3>MDS Admin</h3>
+                    <p>Control Panel</p>
+                </div>
+            </div>
+
+            <div class="admin-info">
+                <div class="admin-avatar" id="adminAvatar">A</div>
+                <div class="a-content">
+                    <h4 id="adminName">Loading...</h4>
+                    <span class="admin-role"><i class="fas fa-crown"></i> <span id="adminRole">Super Admin</span></span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <div class="menu-category">Main</div>
+                <li><a href="#" class="menu-item active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="#" class="menu-item" data-page="enquiries"><i class="fas fa-envelope"></i> Enquiries <span class="menu-badge" id="enqBadge" style="display:none;">0</span></a></li>
+                <li><a href="#" class="menu-item" data-page="customers"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="#" class="menu-item" data-page="customer-projects"><i class="fas fa-project-diagram"></i> Customer Projects</a></li>
+                <li><a href="#" class="menu-item" data-page="payments"><i class="fas fa-wallet"></i> Payments</a></li>
+                <li><a href="#" class="menu-item" data-page="messages"><i class="fas fa-comments"></i> Messages</a></li>
+                
+                <div class="menu-category">Content Management</div>
+                <li><a href="#" class="menu-item" data-page="packages"><i class="fas fa-box"></i> Packages</a></li>
+                <li><a href="#" class="menu-item" data-page="features"><i class="fas fa-star"></i> Features (300+)</a></li>
+                <li><a href="#" class="menu-item" data-page="services"><i class="fas fa-tools"></i> Services</a></li>
+                <li><a href="#" class="menu-item" data-page="projects"><i class="fas fa-images"></i> Portfolio</a></li>
+                <li><a href="#" class="menu-item" data-page="testimonials"><i class="fas fa-quote-left"></i> Testimonials</a></li>
+                <li><a href="#" class="menu-item" data-page="faqs"><i class="fas fa-question-circle"></i> FAQs</a></li>
+                
+                <div class="menu-category">Processes</div>
+                <li><a href="#" class="menu-item" data-page="construction-process"><i class="fas fa-hard-hat"></i> Construction Process</a></li>
+                <li><a href="#" class="menu-item" data-page="design-process"><i class="fas fa-drafting-compass"></i> Design Process</a></li>
+
+                <div class="menu-category">Website</div>
+                <li><a href="#" class="menu-item" data-page="about"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="#" class="menu-item" data-page="settings"><i class="fas fa-cog"></i> Site Settings</a></li>
+                <li><a href="#" class="menu-item" data-page="team"><i class="fas fa-user-tie"></i> Team Members</a></li>
+                <li><a href="#" class="menu-item" data-page="blogs"><i class="fas fa-blog"></i> Blog Posts</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- ============ MAIN CONTENT ============ -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="topbar-right">
+                    <a href="index.html" target="_blank" class="topbar-btn" title="View Website"><i class="fas fa-globe"></i></a>
+                    <button class="topbar-btn" onclick="showPage('enquiries')" title="New Enquiries">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge-dot" id="enqDot" style="display:none;"></span>
+                    </button>
+                    <a href="https://wa.me/918190952731" target="_blank" class="topbar-btn" title="WhatsApp" style="background:#25d366; color:white;"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+
+                <!-- ============ DASHBOARD ============ -->
+                <section class="page-section active" id="page-dashboard">
+                    <div class="page-header">
+                        <div>
+                            <h2>Welcome Back, Admin! 👋</h2>
+                            <div class="breadcrumb">Overview of your business</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card blue">
+                            <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                            <div><h3 id="stat-enquiries">0</h3><p>Total Enquiries</p></div>
+                        </div>
+                        <div class="stat-card orange">
+                            <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                            <div><h3 id="stat-new-enquiries">0</h3><p>New Enquiries</p></div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div><h3 id="stat-customers">0</h3><p>Total Customers</p></div>
+                        </div>
+                        <div class="stat-card purple">
+                            <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+                            <div><h3 id="stat-active-projects">0</h3><p>Active Projects</p></div>
+                        </div>
+                        <div class="stat-card teal">
+                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div><h3 id="stat-completed">0</h3><p>Completed Projects</p></div>
+                        </div>
+                        <div class="stat-card red">
+                            <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                            <div><h3 id="stat-revenue">₹0</h3><p>Total Revenue</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-clock"></i> Recent Enquiries</h3>
+                            <a href="#" class="btn btn-primary btn-sm" onclick="showPage('enquiries')">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Package</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentEnquiries">
+                                        <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ ENQUIRIES ============ -->
+                <section class="page-section" id="page-enquiries">
+                    <div class="page-header">
+                        <div>
+                            <h2>Enquiries Management</h2>
+                            <div class="breadcrumb">Manage customer enquiries and leads</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-envelope"></i> All Enquiries</h3>
+                            <div class="filter-bar" style="margin:0;">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="enquirySearch" placeholder="Search enquiries...">
+                                </div>
+                                <select class="filter-select" id="enquiryStatusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="new">New</option>
+                                    <option value="contacted">Contacted</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="converted">Converted</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table" id="enquiriesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Package</th>
+                                            <th>Location</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="enquiriesTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ CUSTOMERS ============ -->
+                <section class="page-section" id="page-customers">
+                    <div class="page-header">
+                        <div>
+                            <h2>Customer Management</h2>
+                            <div class="breadcrumb">Manage all customer accounts</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-users"></i> All Customers</h3>
+                            <div class="search-box" style="margin:0;">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="customerSearch" placeholder="Search customers...">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>City</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Joined</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customersTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ CUSTOMER PROJECTS ============ -->
+                <section class="page-section" id="page-customer-projects">
+                    <div class="page-header">
+                        <div>
+                            <h2>Customer Projects</h2>
+                            <div class="breadcrumb">Manage all customer construction projects</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openCustomerProjectModal()"><i class="fas fa-plus"></i> Add Project</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Project Name</th>
+                                            <th>Customer</th>
+                                            <th>Package</th>
+                                            <th>Area</th>
+                                            <th>Status</th>
+                                            <th>Total Cost</th>
+                                            <th>Paid</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customerProjectsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ PAYMENTS ============ -->
+                <section class="page-section" id="page-payments">
+                    <div class="page-header">
+                        <div>
+                            <h2>Payments Management</h2>
+                            <div class="breadcrumb">Track all payment transactions</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openPaymentModal()"><i class="fas fa-plus"></i> Add Payment</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Customer</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Method</th>
+                                            <th>Transaction ID</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paymentsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ MESSAGES ============ -->
+                <section class="page-section" id="page-messages">
+                    <div class="page-header">
+                        <div>
+                            <h2>Customer Messages</h2>
+                            <div class="breadcrumb">Chat with customers in real-time</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="customers-list">
+                                <div class="customers-sidebar" id="messageCustomers"></div>
+                                <div class="chat-area">
+                                    <div class="chat-messages" id="chatMessages">
+                                        <div class="empty-state">
+                                            <i class="fas fa-comments"></i>
+                                            <h3>Select a customer to chat</h3>
+                                        </div>
+                                    </div>
+                                    <div class="chat-input">
+                                        <input type="text" id="chatInput" placeholder="Type a message..." disabled onkeypress="if(event.key==='Enter') sendAdminMessage()">
+                                        <button onclick="sendAdminMessage()" id="chatSendBtn" disabled><i class="fas fa-paper-plane"></i> Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ PACKAGES ============ -->
+                <section class="page-section" id="page-packages">
+                    <div class="page-header">
+                        <div>
+                            <h2>Construction Packages</h2>
+                            <div class="breadcrumb">Manage packages with accordion sections & items</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openPackageModal()"><i class="fas fa-plus"></i> Add Package</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Badge</th>
+                                            <th>Popular</th>
+                                            <th>Sections</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="packagesTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ FEATURES ============ -->
+                <section class="page-section" id="page-features">
+                    <div class="page-header">
+                        <div>
+                            <h2>Features Management</h2>
+                            <div class="breadcrumb">Manage 300+ features across categories</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-secondary" onclick="openFeatureCategoryModal()"><i class="fas fa-folder"></i> Add Category</button>
+                            <button class="btn btn-primary" onclick="openFeatureModal()"><i class="fas fa-plus"></i> Add Feature</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-folder"></i> Feature Categories</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category Name</th>
+                                            <th>Icon</th>
+                                            <th>Features Count</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="featureCategoriesTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-star"></i> All Features</h3>
+                            <div class="filter-bar" style="margin:0;">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="featureSearch" placeholder="Search features...">
+                                </div>
+                                <select class="filter-select" id="featureCategoryFilter">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Icon</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="featuresTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ SERVICES ============ -->
+                <section class="page-section" id="page-services">
+                    <div class="page-header">
+                        <div>
+                            <h2>Services</h2>
+                            <div class="breadcrumb">Manage services offered</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openServiceModal()"><i class="fas fa-plus"></i> Add Service</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Icon</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="servicesTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ PROJECTS / PORTFOLIO ============ -->
+                <section class="page-section" id="page-projects">
+                    <div class="page-header">
+                        <div>
+                            <h2>Portfolio / Completed Projects</h2>
+                            <div class="breadcrumb">Manage completed project gallery</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openProjectModal()"><i class="fas fa-plus"></i> Add Project</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Location</th>
+                                            <th>Area</th>
+                                            <th>Featured</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="projectsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ TESTIMONIALS ============ -->
+                <section class="page-section" id="page-testimonials">
+                    <div class="page-header">
+                        <div>
+                            <h2>Testimonials</h2>
+                            <div class="breadcrumb">Manage client testimonials</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openTestimonialModal()"><i class="fas fa-plus"></i> Add Testimonial</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Client Name</th>
+                                            <th>Rating</th>
+                                            <th>Review</th>
+                                            <th>Location</th>
+                                            <th>Featured</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="testimonialsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ FAQs ============ -->
+                <section class="page-section" id="page-faqs">
+                    <div class="page-header">
+                        <div>
+                            <h2>FAQs</h2>
+                            <div class="breadcrumb">Frequently Asked Questions</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openFaqModal()"><i class="fas fa-plus"></i> Add FAQ</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Question</th>
+                                            <th>Category</th>
+                                            <th>Order</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="faqsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ CONSTRUCTION PROCESS ============ -->
+                <section class="page-section" id="page-construction-process">
+                    <div class="page-header">
+                        <div>
+                            <h2>Construction Process</h2>
+                            <div class="breadcrumb">Manage construction timeline steps</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openProcessModal('construction')"><i class="fas fa-plus"></i> Add Step</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Step #</th>
+                                            <th>Title</th>
+                                            <th>Duration</th>
+                                            <th>Details Count</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="constructionProcessTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ DESIGN PROCESS ============ -->
+                <section class="page-section" id="page-design-process">
+                    <div class="page-header">
+                        <div>
+                            <h2>Design Process</h2>
+                            <div class="breadcrumb">Manage design workflow steps</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openProcessModal('design')"><i class="fas fa-plus"></i> Add Step</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Step #</th>
+                                            <th>Title</th>
+                                            <th>Duration</th>
+                                            <th>Details Count</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="designProcessTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ ABOUT US ============ -->
+                <section class="page-section" id="page-about">
+                    <div class="page-header">
+                        <div>
+                            <h2>About Us</h2>
+                            <div class="breadcrumb">Manage company information</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="aboutForm">
+                                <div class="form-grid">
+                                    <div class="form-group full">
+                                        <label>Title</label>
+                                        <input type="text" id="about-title" required>
+                                    </div>
+                                    <div class="form-group full">
+                                        <label>Description</label>
+                                        <textarea id="about-description" rows="4" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Years of Experience</label>
+                                        <input type="number" id="about-years" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Projects Completed</label>
+                                        <input type="number" id="about-projects" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Happy Clients</label>
+                                        <input type="number" id="about-clients" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Awards Won</label>
+                                        <input type="number" id="about-awards" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Team Members</label>
+                                        <input type="number" id="about-team" required>
+                                    </div>
+                                    <div class="form-group full">
+                                        <label>Mission Statement</label>
+                                        <textarea id="about-mission" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group full">
+                                        <label>Vision Statement</label>
+                                        <textarea id="about-vision" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ SITE SETTINGS ============ -->
+                <section class="page-section" id="page-settings">
+                    <div class="page-header">
+                        <div>
+                            <h2>Site Settings</h2>
+                            <div class="breadcrumb">Manage website configuration</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="settingsForm">
+                                <div class="form-grid" id="settingsGrid"></div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ TEAM MEMBERS ============ -->
+                <section class="page-section" id="page-team">
+                    <div class="page-header">
+                        <div>
+                            <h2>Team Members</h2>
+                            <div class="breadcrumb">Manage team profiles</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openTeamModal()"><i class="fas fa-plus"></i> Add Member</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Designation</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="teamTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ BLOGS ============ -->
+                <section class="page-section" id="page-blogs">
+                    <div class="page-header">
+                        <div>
+                            <h2>Blog Posts</h2>
+                            <div class="breadcrumb">Manage blog articles</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openBlogModal()"><i class="fas fa-plus"></i> New Post</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Views</th>
+                                            <th>Published</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="blogsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
